@@ -1,0 +1,1 @@
+export { default as environtmentSpace } from './environtmentSpace'
