@@ -115,7 +115,31 @@ const params = {
   lookJupiter: () => changeCamera(jupiter),
   lookNeptune: () => changeCamera(neptune),
   lookSaturn: () => changeCamera(saturn),
-  lookMercury: () => changeCamera(mercury)
+  lookMercury: () => changeCamera(mercury),
+  unReal: () => {
+    const distance = 1
+    mercury.position.x = 2;
+    venus.position.x = 2.2;
+    earth.position.x = 2.4;
+    mars.position.x = 2.6;
+    jupiter.position.x = 3.2;
+    saturn.position.x = 3.6;
+    uranus.position.x = 4;
+    neptune.position.x = 4.4;
+    pluto.position.x = 4.6;
+
+  },
+  real: () => {
+    mercury.position.x = 57.9
+    venus.position.x = 108.2;
+    earth.position.x = 149.6;
+    mars.position.x = 227.9;
+    jupiter.position.x = 778.6;
+    saturn.position.x = 1433.5;
+    uranus.position.x = 2872.5;
+    neptune.position.x = 4495.1;
+    pluto.position.x = 5058;
+  }
 
 }
 
@@ -218,5 +242,10 @@ gui
 gui
   .add(params, 'lookPluto')
   .name('Pluto perspective')
-
+gui
+  .add(params, 'unReal')
+  .name('Collapse planets')
+gui
+  .add(params, 'real')
+  .name('Real distance')
 
