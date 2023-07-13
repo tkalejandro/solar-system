@@ -3,8 +3,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import GUI from 'lil-gui'
 import gsap from 'gsap'
 import { environtmentSpace } from './modules/textures'
-import { sun, earth, venus, jupiter, mars, mercury, neptune, pluto, saturn, uranus } from './modules/objects'
+import { saturnRing, sun, earth, venus, jupiter, mars, mercury, neptune, pluto, saturn, uranus, moon } from './modules/objects'
 
+console.log(moon)
 
 //#region CANVAS 
 const canvas = document.querySelector('.webgl')
@@ -78,7 +79,7 @@ scene.add(sunLight)
 //#endregion
 
 // Objects
-scene.add(earth, jupiter, mars, mercury, neptune, pluto, saturn, sun, uranus, venus)
+scene.add(earth, saturnRing, jupiter, mars, mercury, neptune, pluto, saturn, sun, uranus, venus, moon)
 
 //#region RENDERER
 const renderer = new THREE.WebGL1Renderer({
@@ -91,6 +92,22 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 //#region ANIMATE
 const clock = new THREE.Clock()
+
+// Create a timeline for the Moon orbit
+const moonTimeline = gsap.timeline({ repeat: -1 });
+
+// Define the Moon orbit animation
+moonTimeline.to(moon.position, {
+  duration: 180, // Animation duration (in seconds)
+  angle: Math.PI * 2, // Rotate 360 degrees around the Earth
+  ease: 'infinite', // Easing function
+  onUpdate: () => {
+    const angle = moonTimeline.progress() * Math.PI * 2;
+    const radius = 20; // Adjust the radius of the Moon's orbit around Earth
+    moon.position.x = earth.position.x + Math.sin(angle) * radius;
+    moon.position.z = earth.position.z + Math.cos(angle) * radius;
+  },
+});
 
 const changeCamera = (obj) => {
 
@@ -110,6 +127,7 @@ const params = {
   lookSun: () => changeCamera(sun),
   lookPluto: () => changeCamera(pluto),
   lookEarth: () => changeCamera(earth),
+  lookMoon: () => changeCamera(moon),
   lookUranus: () => changeCamera(uranus),
   lookVenus: () => changeCamera(venus),
   lookJupiter: () => changeCamera(jupiter),
@@ -117,31 +135,38 @@ const params = {
   lookSaturn: () => changeCamera(saturn),
   lookMercury: () => changeCamera(mercury),
   unReal: () => {
-    const distance = 1
+    camera.position.z = 5
     mercury.position.x = 2;
     venus.position.x = 2.2;
     earth.position.x = 2.4;
+    moon.position.x = 2.45
     mars.position.x = 2.6;
     jupiter.position.x = 3.2;
-    saturn.position.x = 3.6;
-    uranus.position.x = 4;
-    neptune.position.x = 4.4;
-    pluto.position.x = 4.6;
+    saturn.position.x = 4;
+    saturnRing.position.x = 4;
+    uranus.position.x = 4.8;
+    neptune.position.x = 5;
+    pluto.position.x = 5.2;
 
   },
   real: () => {
     mercury.position.x = 57.9
     venus.position.x = 108.2;
     earth.position.x = 149.6;
+    moon.position.x = 149.98
     mars.position.x = 227.9;
     jupiter.position.x = 778.6;
     saturn.position.x = 1433.5;
+    saturnRing.position.x = 1433.5;
+
     uranus.position.x = 2872.5;
     neptune.position.x = 4495.1;
     pluto.position.x = 5058;
   }
 
 }
+
+
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
@@ -160,28 +185,27 @@ const tick = () => {
   earth.rotation.y += rotationSpeed;
 
   // Jupiter
-  jupiter.rotation.y += rotationSpeed * 2; // Adjust the rotation speed as desired
+  jupiter.rotation.y += rotationSpeed * 2;
 
   // Mars
-  mars.rotation.y += rotationSpeed * 1.03; // Adjust the rotation speed as desired
+  mars.rotation.y += rotationSpeed * 1.03; 
 
   // Mercury
-  mercury.rotation.y += rotationSpeed * 0.41; // Adjust the rotation speed as desired
-
+  mercury.rotation.y += rotationSpeed * 0.41; 
   // Neptune
-  neptune.rotation.y += rotationSpeed * 0.006; // Adjust the rotation speed as desired
+  neptune.rotation.y += rotationSpeed * 0.006; 
 
   // Pluto
-  pluto.rotation.y += rotationSpeed * 0.0042; // Adjust the rotation speed as desired
+  pluto.rotation.y += rotationSpeed * 0.0042; 
 
   // Saturn
-  saturn.rotation.y += rotationSpeed * 0.44; // Adjust the rotation speed as desired
+  saturn.rotation.y += rotationSpeed * 0.44; 
 
   // Uranus
-  uranus.rotation.y += rotationSpeed * 0.78; // Adjust the rotation speed as desired
+  uranus.rotation.y += rotationSpeed * 0.78; 
 
   // Venus
-  venus.rotation.y += rotationSpeed * 1.92; // Adjust the rotation speed as desired
+  venus.rotation.y += rotationSpeed * 1.92;
 
 
 
@@ -222,6 +246,9 @@ gui
 gui
   .add(params, 'lookEarth')
   .name('Earth perspective')
+  gui
+  .add(params, 'lookMoon')
+  .name('Moon perspective')
 gui
   .add(params, 'lookMars')
   .name('Mars perspective')

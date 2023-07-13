@@ -9,4 +9,9 @@ const earthMaterial = new THREE.MeshStandardMaterial({map: texture});
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 earth.position.x = earthDistance;
 
+
+
+
+
+
 export default earth
